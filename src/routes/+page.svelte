@@ -3,6 +3,25 @@
     import TileComponent from "../components/Tile.svelte";
     import { onMount } from "svelte";
 
+
+    const colors: any = {
+        nonmetal: 'FEC868',
+        noble_gas: 'F6E1C3',
+        'noble gas': 'F6E1C3',
+        alkali_metal: 'C539B4',
+        'alkali metal': 'C539B4',
+        alkaline_earth_metal: 'AD7BE9',
+        'alkaline earth metal': 'AD7BE9',
+        metalloid: '9DC08B',
+        halogen: 'C9F4AA',
+        metal: 'DDD',
+        transition_metal: 'FFE1E1',
+        'transition metal': 'FFE1E1',
+        lanthanoid: '81CACF',
+        actinoid: '789395',
+        'post-transition metal': '82A284'
+    }
+
     let selected: null | Tile = null;
 
     const maxColumns = 18;
@@ -23,7 +42,7 @@
     onMount(async() => {
         let res: Response | ChemicalElement[] = await fetch('https://neelpatel05.pythonanywhere.com/')
         res = await res.json()
-        elements = [...(res as ChemicalElement[])]
+        elements = (res as ChemicalElement[]).map(el => ({ ...el, color: colors[el.groupBlock] }))
 
         let elementsIdx = 0
         for(let i = 0; i < layout.length; i++) {
@@ -38,9 +57,21 @@
                 tiles = [...tiles, { y: i, x: j - 1, element: el }]
             }
         }
-        console.log(tiles)
     })
 /* 
+    [
+        "nonmetal",
+        "noble gas",
+        "alkali metal",
+        "alkaline earth metal",
+        "metalloid",
+        "halogen",
+        "metal",
+        "transition metal",
+        "lanthanoid",
+        "actinoid",
+        "post-transition metal"
+    ],
   {
     "atomicMass": "1.00794(4)",
     "atomicNumber": 1,
