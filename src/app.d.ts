@@ -28,6 +28,10 @@ declare global {
 		vanDerWaalsRadius: number
 		yearDiscovered: number
 	}
+	type Tile = {
+		y: number
+		element: ChemicalElement | null
+	}
 }
 
 export {};
