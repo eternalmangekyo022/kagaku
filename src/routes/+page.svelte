@@ -89,12 +89,15 @@
 
 <div class='w-[100vw] h-[100vh] relative flex flex-col'>
     <header class='w-full h-[10%] bg-slate-400'></header>
-    <main class='w-full h-[80%] relative'>
+    <main class='w-full h-[80%] relative flex justify-center items-center'>
         <!-- container for periodic table -->
-        <div class='w-full h-full relative'>
+        <div
+            class='w-[70%] h-[90%] relative'
+            on:mouseleave={() => selectedColor.set(null)}
+        >
             {#key selectedColor}
                 {#each tiles as tile}
-                    <TileComponent {tile} {selected} selectedWritable={selectedColor}/>
+                    <TileComponent {tile} {selected} {selectedColor}/>
                 {/each}
             {/key}
             <!-- selected -->
