@@ -1,6 +1,8 @@
 <!-- svelte-ignore empty-block -->
 <script lang='ts'>
+    import TileComponent from "../components/Tile.svelte";
     import { onMount } from "svelte";
+
     const maxColumns = 18;
     let elements: ChemicalElement[] = [];
     let tiles: Tile[] = [];
@@ -32,8 +34,7 @@
             for(let j = 1; j < maxColumns + 1; j++) {
                 let el: ChemicalElement | null = iter.includes(j) ? elements[elementsIdx] : null;
                 if(el) elementsIdx++;
-
-                tiles = [...tiles, { y: j, element: el }]
+                tiles = [...tiles, { y: i, x: j - 1, element: el }]
             }
         }
         console.log(tiles)
@@ -65,6 +66,16 @@
 
 </script>
 
-<div class='w-[100vw] h-[100vh] relative'>
-    
+<div class='w-[100vw] h-[100vh] relative flex flex-col'>
+    <header class='w-full h-[10%]'></header>
+    <main class='w-full h-[80%] relative'>
+        <div class='w-full h-full'>
+            {#each tiles as tile}
+                <TileComponent {tile}/>
+            {/each}
+        </div>
+    </main>
+    <footer class='w-full h-[10%]'>
+
+    </footer>
 </div>

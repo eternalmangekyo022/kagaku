@@ -29,6 +29,7 @@ declare global {
 		yearDiscovered: number
 	}
 	type Tile = {
+		x: number
 		y: number
 		element: ChemicalElement | null
 	}
