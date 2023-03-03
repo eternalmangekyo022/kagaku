@@ -5,6 +5,7 @@
     import { writable } from "svelte/store";
     
     const selectedColor = writable<string | null>(null);
+    const selected = writable<Tile | undefined>();
 
     const colors: any = {
         nonmetal: 'FEC868',
@@ -24,7 +25,6 @@
         'post-transition metal': '82A284'
     }
 
-    let selected: null | Tile = null;
 
     const maxColumns = 18;
     let elements: ChemicalElement[] = [];
@@ -59,6 +59,7 @@
                 tiles = [...tiles, { y: i, x: j - 1, element: el }]
             }
         }
+        selected.set(tiles[0]);
     })
 /* 
   {
@@ -95,6 +96,16 @@
             class='w-[70%] h-[90%] relative'
             on:mouseleave={() => selectedColor.set(null)}
         >
+            {#if $selected}
+            <div class='w-[14rem] h-[10rem] absolute left-1/2 top-[3rem] -translate-x-[110%]'
+                style={`background: #${$selected.element?.color}`}
+            >
+                <span class='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[70%] font-bold text-4xl'>{$selected?.element?.symbol}</span>
+                <span class='absolute right-1 top-[1px] text-2xl'>{$selected?.element?.atomicNumber}</span>
+                <span class='absolute left-1/2 top-[60%] text-lg -translate-x-1/2'>{$selected?.element?.name}</span>
+                <span class='absolute top-[80%] left-1/2 -translate-x-1/2 text-md text-center w-full text-ellipsis whitespace-nowrap overflow-hidden'>{$selected?.element?.groupBlock}</span>
+            </div>
+            {/if}
             {#key selectedColor}
                 {#each tiles as tile}
                     <TileComponent {tile} {selected} {selectedColor}/>

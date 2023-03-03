@@ -1,9 +1,8 @@
 <script lang='ts'>
     import type { Writable } from "svelte/store";
-    import { writable } from "svelte/store";
 
     export let tile: Tile;
-    export let selected: Tile | null
+    export let selected: Writable<Tile | undefined>
     export let selectedColor: Writable<string | null>
     const size = 4.5;
     const tileOffset = size + .4;
@@ -17,7 +16,7 @@
 <div
     on:click={() => {
         if(tile?.element) {
-            selected = tile
+            selected.set(tile);
         }
     }}
     on:keydown
