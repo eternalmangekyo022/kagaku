@@ -88,7 +88,7 @@
 </script>
 
 <div class='w-[100vw] h-[100vh] relative flex flex-col'>
-    <header class='w-full h-[10%]'></header>
+    <header class='w-full h-[10%] bg-slate-400'></header>
     <main class='w-full h-[80%] relative'>
         <!-- container for periodic table -->
         <div class='w-full h-full relative'>
@@ -97,6 +97,8 @@
                     <TileComponent {tile} {selected} selectedWritable={selectedColor}/>
                 {/each}
             {/key}
+            <!-- selected -->
+            <div class=''></div>
         </div>
     </main>
     <footer class='w-full h-[10%]'>
