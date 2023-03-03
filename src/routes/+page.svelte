@@ -103,7 +103,7 @@
                 <span class='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[70%] font-bold text-4xl'>{$selected?.element?.symbol}</span>
                 <span class='absolute right-1 top-[1px] text-2xl'>{$selected?.element?.atomicNumber}</span>
                 <span class='absolute left-1/2 top-[60%] text-lg -translate-x-1/2'>{$selected?.element?.name}</span>
-                <span class='absolute top-[80%] left-1/2 -translate-x-1/2 text-md text-center w-full text-ellipsis whitespace-nowrap overflow-hidden'>{$selected?.element?.groupBlock}</span>
+                <span class='absolute top-[80%] left-1/2 -translate-x-1/2 text-sm text-center w-full text-ellipsis whitespace-nowrap overflow-hidden'>{$selected?.element?.groupBlock}</span>
             </div>
             {/if}
             {#key selectedColor}
