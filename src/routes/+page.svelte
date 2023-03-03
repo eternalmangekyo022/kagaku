@@ -3,10 +3,11 @@
     import TileComponent from "../components/Tile.svelte";
     import { onMount } from "svelte";
 
+    let selected: null | Tile = null;
+
     const maxColumns = 18;
     let elements: ChemicalElement[] = [];
     let tiles: Tile[] = [];
-
     let layout: (number[] | null)[] = [[1, 18], [1, 2, 13, 14, 15, 16, 17, 18], null, [], [], [-3], [-3], [-1, -2, -3], [-1, -2, -3]];
 
     const getFrom = (nums: number[]): number[] => {
@@ -69,9 +70,10 @@
 <div class='w-[100vw] h-[100vh] relative flex flex-col'>
     <header class='w-full h-[10%]'></header>
     <main class='w-full h-[80%] relative'>
-        <div class='w-full h-full'>
+        <!-- container for periodic table -->
+        <div class='w-full h-full relative'>
             {#each tiles as tile}
-                <TileComponent {tile}/>
+                <TileComponent {tile} {selected}/>
             {/each}
         </div>
     </main>

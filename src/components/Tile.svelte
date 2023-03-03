@@ -1,10 +1,15 @@
 <script lang='ts'>
-    export let tile: Tile
+    export let tile: Tile;
+    export let selected;
+    const size = 4.5;
+    const tileOffset = size + .4;
 </script>
 
 <div 
-    class={`w-16 h-16 absolute border-2 border-black ${!tile.element && 'border-none'}`}
-    style={`left: ${tile.x * 4}rem; top: ${tile.y * 4}rem;`}
+    class={`absolute border-2 ${!tile.element && 'border-none'} -translate-x-1/2 -translate-y-1/2`}
+    style={`left: calc(${tile.x * tileOffset}rem + 15%); top: calc(${tile.y * tileOffset}rem + 20%); width: ${size}rem; height: ${size}rem;`}
 >
-    
+    {#if tile.element}
+        <span class='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'>{tile.element.symbol}</span>
+    {/if}
 </div>
