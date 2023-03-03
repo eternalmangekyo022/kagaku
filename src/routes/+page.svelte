@@ -2,14 +2,16 @@
 <script lang='ts'>
     import TileComponent from "../components/Tile.svelte";
     import { onMount } from "svelte";
-
+    import { writable } from "svelte/store";
+    
+    const selectedColor = writable<string | null>(null);
 
     const colors: any = {
         nonmetal: 'FEC868',
         noble_gas: 'F6E1C3',
         'noble gas': 'F6E1C3',
-        alkali_metal: 'C539B4',
-        'alkali metal': 'C539B4',
+        alkali_metal: 'D9ACF5',
+        'alkali metal': 'D9ACF5',
         alkaline_earth_metal: 'AD7BE9',
         'alkaline earth metal': 'AD7BE9',
         metalloid: '9DC08B',
@@ -17,7 +19,7 @@
         metal: 'DDD',
         transition_metal: 'FFE1E1',
         'transition metal': 'FFE1E1',
-        lanthanoid: '81CACF',
+        lanthanoid: 'CDF0EA',
         actinoid: '789395',
         'post-transition metal': '82A284'
     }
@@ -59,19 +61,6 @@
         }
     })
 /* 
-    [
-        "nonmetal",
-        "noble gas",
-        "alkali metal",
-        "alkaline earth metal",
-        "metalloid",
-        "halogen",
-        "metal",
-        "transition metal",
-        "lanthanoid",
-        "actinoid",
-        "post-transition metal"
-    ],
   {
     "atomicMass": "1.00794(4)",
     "atomicNumber": 1,
@@ -103,9 +92,11 @@
     <main class='w-full h-[80%] relative'>
         <!-- container for periodic table -->
         <div class='w-full h-full relative'>
-            {#each tiles as tile}
-                <TileComponent {tile} {selected}/>
-            {/each}
+            {#key selectedColor}
+                {#each tiles as tile}
+                    <TileComponent {tile} {selected} selectedWritable={selectedColor}/>
+                {/each}
+            {/key}
         </div>
     </main>
     <footer class='w-full h-[10%]'>

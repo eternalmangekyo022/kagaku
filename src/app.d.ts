@@ -27,7 +27,7 @@ declare global {
 		symbol: string
 		vanDerWaalsRadius: number
 		yearDiscovered: number
-		color: string
+		color: Writable<string | null>
 	}
 	type Tile = {
 		x: number
