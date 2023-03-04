@@ -26,8 +26,8 @@
     }}
 
     class={`absolute -translate-x-1/2 -translate-y-1/2 transition-[.3s] 
-            cursor-pointer hover:transition-[1s] hover:scale-125 hover:z-10 hover:border-2 border-black
-             p-2${!tile.element && ' border-none cursor-default opacity-0'}
+            cursor-${!tile.element ? 'default' : 'pointer'} hover:transition-[1s] hover:scale-125 hover:z-10 hover:border-2 border-black
+             p-2${!tile.element && ' border-none opacity-0'}
             `}
     style={`background: #${([null, tile.element?.color].includes($selectedColor)) ? tile.element?.color : 'ECF2FF'}; left: ${tile.x * tileOffset}rem; top: calc(${tile.y * tileOffset}rem + 10%); width: ${size}rem; height: ${size}rem;`}
     >   

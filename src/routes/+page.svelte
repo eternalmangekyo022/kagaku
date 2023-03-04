@@ -112,8 +112,6 @@
                 {/each}
             {/key}
             <!-- selected -->
-            <div class=''></div>
-        </div>
     </main>
     <footer class='w-full h-[10%]'>
 
