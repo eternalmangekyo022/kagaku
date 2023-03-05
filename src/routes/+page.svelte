@@ -2,6 +2,7 @@
     import TileComponent from "../components/Tile.svelte";
     import { onMount } from "svelte";
     import { writable } from "svelte/store";
+    import Quiz from "../components/Quiz.svelte";
     
     const selectedColor = writable<string | null>(null);
     const selected = writable<Tile | undefined>();
@@ -39,6 +40,12 @@
         }
 
         return ret
+    }
+
+    const randomTile = (): Tile => {
+        let temp: Tile = tiles[Math.floor(Math.random() * (tiles.length - 2))]
+        while(!temp.element) temp = tiles[Math.floor(Math.random() * (tiles.length - 2))]
+        return temp
     }
 
     onMount(async() => {
@@ -112,13 +119,13 @@
                         <span class='absolute top-[80%] left-1/2 -translate-x-1/2 text-sm text-center w-full text-ellipsis whitespace-nowrap overflow-hidden'>{$selected?.element?.groupBlock}</span>
                     </div>
                     {#each tiles as tile}
-                    <TileComponent {tile} {selected} {selectedColor}/>
+                    <TileComponent {tile} {selected} {selectedColor} position={"absolute"}/>
                     {/each}
                     {/if}
                 </div>
-            {:else if route === 'quiz'}
-                div
-            {/if}
+        {:else if route === 'quiz'}
+            <Quiz tile={ randomTile() }/>
+        {/if}
         </main>
         <footer class='w-full h-[10%]'>
     
