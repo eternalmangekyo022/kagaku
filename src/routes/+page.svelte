@@ -1,4 +1,3 @@
-<!-- svelte-ignore empty-block -->
 <script lang='ts'>
     import TileComponent from "../components/Tile.svelte";
     import { onMount } from "svelte";
@@ -6,6 +5,7 @@
     
     const selectedColor = writable<string | null>(null);
     const selected = writable<Tile | undefined>();
+    let route: '/' | 'quiz' = '/';
 
     const colors: any = {
         nonmetal: 'FEC868',
@@ -88,32 +88,39 @@
 
 </script>
 
-<div class='w-[100vw] h-[100vh] relative flex flex-col'>
-    <header class='w-full h-[10%] bg-slate-400'></header>
-    <main class='w-full h-[80%] relative flex justify-center items-center'>
-        <!-- container for periodic table -->
-        <div
-            class='w-[70%] h-[90%] relative'
-            on:mouseleave={() => selectedColor.set(null)}
-        >
-            {#if $selected}
-            <div class='w-[14rem] h-[10rem] absolute left-1/2 top-[3rem] -translate-x-[110%]'
-                style={`background: #${$selected.element?.color}`}
+    <div class='w-[100vw] h-[100vh] relative flex flex-col'>
+        <header class='w-full h-[10%] bg-slate-400'>
+            <nav class='w-full h-full flex justify-around items-center'>
+                <button on:click={() => route = '/'}>Periodic Table</button>
+                <button on:click={() => route = 'quiz'}>Quiz</button>
+            </nav>
+        </header>
+        <main class='w-full h-[80%] relative flex justify-center items-center'>
+            {#if route === '/'}
+            <!-- container for periodic table -->
+            <div
+                class='w-[70%] h-[90%] relative'
+                on:mouseleave={() => selectedColor.set(null)}
             >
-                <span class='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[70%] font-bold text-4xl'>{$selected?.element?.symbol}</span>
-                <span class='absolute right-1 top-[1px] text-2xl'>{$selected?.element?.atomicNumber}</span>
-                <span class='absolute left-1/2 top-[60%] text-lg -translate-x-1/2'>{$selected?.element?.name}</span>
-                <span class='absolute top-[80%] left-1/2 -translate-x-1/2 text-sm text-center w-full text-ellipsis whitespace-nowrap overflow-hidden'>{$selected?.element?.groupBlock}</span>
-            </div>
-            {/if}
-            {#key selectedColor}
-                {#each tiles as tile}
+                {#if $selected}
+                    <div class='w-[14rem] h-[10rem] absolute left-1/2 top-[3rem] -translate-x-[110%]'
+                        style={`background: #${$selected.element?.color}`}
+                    >
+                        <span class='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[70%] font-bold text-4xl'>{$selected?.element?.symbol}</span>
+                        <span class='absolute right-1 top-[1px] text-2xl'>{$selected?.element?.atomicNumber}</span>
+                        <span class='absolute left-1/2 top-[60%] text-lg -translate-x-1/2'>{$selected?.element?.name}</span>
+                        <span class='absolute top-[80%] left-1/2 -translate-x-1/2 text-sm text-center w-full text-ellipsis whitespace-nowrap overflow-hidden'>{$selected?.element?.groupBlock}</span>
+                    </div>
+                    {#each tiles as tile}
                     <TileComponent {tile} {selected} {selectedColor}/>
-                {/each}
-            {/key}
-            <!-- selected -->
-    </main>
-    <footer class='w-full h-[10%]'>
-
-    </footer>
-</div>
+                    {/each}
+                    {/if}
+                </div>
+            {:else if route === 'quiz'}
+                div
+            {/if}
+        </main>
+        <footer class='w-full h-[10%]'>
+    
+        </footer>
+    </div>

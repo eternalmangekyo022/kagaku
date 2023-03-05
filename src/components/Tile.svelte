@@ -26,10 +26,10 @@
     }}
 
     class={`absolute -translate-x-1/2 -translate-y-1/2 transition-[.3s] 
-            cursor-${!tile.element ? 'default' : 'pointer'} hover:transition-[1s] hover:scale-125 hover:z-10 hover:border-2 border-black
+            hover:transition-[1s] hover:scale-125 hover:z-10 hover:border-2 border-black
              p-2${!tile.element && ' border-none opacity-0'}
             `}
-    style={`background: #${([null, tile.element?.color].includes($selectedColor)) ? tile.element?.color : 'ECF2FF'}; left: ${tile.x * tileOffset}rem; top: calc(${tile.y * tileOffset}rem + 10%); width: ${size}rem; height: ${size}rem;`}
+    style={`cursor: ${!tile.element ? 'default' : 'pointer'}; background: #${([null, tile.element?.color].includes($selectedColor)) ? tile.element?.color : 'ECF2FF'}; left: ${tile.x * tileOffset}rem; top: calc(${tile.y * tileOffset}rem + 10%); width: ${size}rem; height: ${size}rem;`}
     >   
     {#if tile.element}
             <span class='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[70%] font-bold'>{tile.element.symbol}</span>
