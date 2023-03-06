@@ -6,6 +6,7 @@
     export let selectedColor: Writable<string | null>
     export let position: 'relative' | 'absolute';
     export let size = 5.25
+    export let onClick: null | (() => {}) = null
     
     const offset = { left: -7, top: 11 }
 
@@ -20,6 +21,7 @@
         if(tile?.element) {
             selected.set(tile);
         }
+        onClick && onClick()
     }}
     on:keydown
     on:mouseenter={() => {
@@ -35,9 +37,7 @@
     >   
     {#if tile.element}
             <span style={`font-size: ${position === 'relative' ? size * 0.07 : 1}rem`} class='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[70%] font-bold'>{tile.element.symbol}</span>
-            {#if position === 'absolute'}
-                <span style='font-size: 0.9rem;' class='absolute right-[10%] top-[10%]'>{tile.element.atomicNumber}</span>
-            {/if}
+            <span style={`font-size: ${position === 'relative' ? size * 0.03 : .8}rem`} class='absolute right-[15%] top-[10%]'>{#if position === 'absolute'}{tile.element.atomicNumber}{:else}?{/if}</span>
             <span style={`font-size: ${position === 'relative' ? size * 0.03 : .75}rem`} class='absolute left-1/2 top-[60%] -translate-x-1/2'>{tile.element.name}</span>
             <span style={`font-size: ${position === 'relative' ? size * 0.02 : .65}rem`} class='absolute top-[80%] left-1/2 -translate-x-1/2 text-center w-full text-ellipsis whitespace-nowrap overflow-hidden'>{tile.element.groupBlock}</span>
     {/if}
