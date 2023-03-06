@@ -124,7 +124,7 @@
                     {/if}
                 </div>
         {:else if route === 'quiz'}
-            <Quiz tile={ randomTile() }/>
+            <Quiz {randomTile}/>
         {/if}
         </main>
         <footer class='w-full h-[10%]'>

@@ -7,7 +7,7 @@
     export let position: 'relative' | 'absolute';
     export let size = 5.25
     
-    const offset = { left: -7, top: 8 }
+    const offset = { left: -7, top: 11 }
 
     const left = position === 'relative' ? '0' : `${tile.x * size * 1.2 + offset.left}%`
     const top = position === 'relative' ? '0' : `${tile.y * size * 2.3 + offset.top}%`
