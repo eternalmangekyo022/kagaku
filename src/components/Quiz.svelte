@@ -5,9 +5,8 @@
     const selectedColor = writable<string | null>();
 
     export let tile: Tile;
-    console.log(tile)
 </script>
 
 <div class='w-[25%] h-[70%] border-2 border-black flex justify-center items-center'> 
-    <TileComponent size={15} {tile} {selected} {selectedColor} position={'relative'}/>
+    <TileComponent size={70} {tile} {selected} {selectedColor} position={'relative'}/>
 </div>
