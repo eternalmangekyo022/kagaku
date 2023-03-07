@@ -2,11 +2,13 @@
     import TileComponent from "../components/Tile.svelte";
     import { onMount } from "svelte";
     import { writable } from "svelte/store";
+    import type { Writable } from 'svelte/store';
     import Quiz from "../components/Quiz.svelte";
     
     const selectedColor = writable<string | null>(null);
     const selected = writable<Tile | undefined>();
     let route: '/' | 'quiz' = '/';
+    let learned: Writable<number[]> = writable([]);
 
     const colors: any = {
         nonmetal: 'FEC868',
@@ -49,6 +51,9 @@
     }
 
     onMount(async() => {
+        const temp: null | string = localStorage.getItem('learned');
+        temp && learned.set(JSON.parse(temp))
+
         let res: Response | ChemicalElement[] = await fetch('https://neelpatel05.pythonanywhere.com/')
         res = await res.json()
         elements = (res as ChemicalElement[]).map(el => ({ ...el, color: colors[el.groupBlock] }))
@@ -63,7 +68,7 @@
             for(let j = 1; j < maxColumns + 1; j++) {
                 let el: ChemicalElement | null = iter.includes(j) ? elements[elementsIdx] : null;
                 if(el) elementsIdx++;
-                tiles = [...tiles, { y: i, x: j - 1, element: el }]
+                tiles = [...tiles, { y: i, x: j - 1, element: el, learned: $learned.includes(el?.atomicNumber || -1) }]
             }
         }
         selected.set(tiles[0]);
@@ -119,7 +124,7 @@
                         <span class='absolute top-[80%] left-1/2 -translate-x-1/2 text-sm text-center w-full text-ellipsis whitespace-nowrap overflow-hidden'>{$selected?.element?.groupBlock}</span>
                     </div>
                     {#each tiles as tile}
-                    <TileComponent {tile} {selected} {selectedColor} position={"absolute"}/>
+                    <TileComponent {tile} {selected} {selectedColor} position={"absolute"} save={() => localStorage.setItem('learned', JSON.stringify(tiles.filter(i => i.learned && i.element).map(i => i?.element?.atomicNumber)))}/>
                     {/each}
                     {/if}
                 </div>

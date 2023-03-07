@@ -1,5 +1,5 @@
 <script lang='ts'>
-    import { writable } from "svelte/store";
+    import { writable, type Writable } from "svelte/store";
     import TileComponent from "./Tile.svelte";
     
     export let randomTile: () => Tile;

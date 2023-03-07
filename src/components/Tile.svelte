@@ -6,6 +6,10 @@
     export let selectedColor: Writable<string | null>
     export let position: 'relative' | 'absolute';
     export let size = 5.25
+    export let save: () => void;
+
+    //optional
+
     export let onClick: null | (() => {}) = null
     
     const offset = { left: -7, top: 11 }
@@ -28,6 +32,11 @@
         if(tile.element?.color) selectedColor.set(tile.element?.color)
         if(!tile.element) selectedColor.set(null)
     }}
+    on:contextmenu={e => {
+        e.preventDefault();
+        tile.learned = !tile.learned;
+        save();
+    }}
 
     class={`${position === 'absolute' ? 'absolute -translate-x-1/2 -translate-y-1/2 hover:transition-[1s] hover:scale-125 hover:z-10 hover:border-2 border-black ': 'relative '}transition-[.3s]
             
@@ -36,6 +45,9 @@
     style={`cursor: ${!tile.element ? 'default' : 'pointer'}; background: #${([null, tile.element?.color].includes($selectedColor)) ? tile.element?.color : (position === 'absolute' ? 'ECF2FF' : tile.element?.color)}; left: ${left}; top: ${top}; width: ${size}%; aspect-ratio: 1/1;`}
     >   
     {#if tile.element}
+            {#if tile.learned}
+                <span class='absolute left-[6%] top-[6%]'><img src="https://www.svgrepo.com/show/458643/done.svg" alt="Done" width={position === 'absolute' ? 25 : 50}></span>
+            {/if}
             <span style={`font-size: ${position === 'relative' ? size * 0.07 : 1}rem`} class='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[70%] font-bold'>{tile.element.symbol}</span>
             <span style={`font-size: ${position === 'relative' ? size * 0.03 : .8}rem`} class='absolute right-[15%] top-[10%]'>{#if position === 'absolute'}{tile.element.atomicNumber}{:else}?{/if}</span>
             <span style={`font-size: ${position === 'relative' ? size * 0.03 : .75}rem`} class='absolute left-1/2 top-[60%] -translate-x-1/2'>{tile.element.name}</span>

@@ -33,6 +33,7 @@ declare global {
 		x: number
 		y: number
 		element: ChemicalElement | null
+		learned: boolean
 	}
 }
 
