@@ -6,6 +6,7 @@
     export let selectedColor: Writable<string | null>
     export let position: 'relative' | 'absolute';
     export let size = 5.25
+    export let learned: Writable<number[]>;
     export let save: () => void;
 
     //optional
@@ -34,6 +35,9 @@
     }}
     on:contextmenu={e => {
         e.preventDefault();
+        if(tile.learned) {
+            learned.update(prev => prev.filter(i => tile?.element?.atomicNumber !== i))
+        } else learned.update(prev => [...prev, tile?.element?.atomicNumber || -1])
         tile.learned = !tile.learned;
         save();
     }}
@@ -46,7 +50,7 @@
     >   
     {#if tile.element}
             {#if tile.learned}
-                <span class='absolute left-[6%] top-[6%]'><img src="https://www.svgrepo.com/show/458643/done.svg" alt="Done" width={position === 'absolute' ? 25 : 50}></span>
+                <span class='absolute left-[6%] top-[6%] selection:bg-transparent'><img src="https://www.svgrepo.com/show/458643/done.svg" alt="Done" width={position === 'absolute' ? 25 : 50}></span>
             {/if}
             <span style={`font-size: ${position === 'relative' ? size * 0.07 : 1}rem`} class='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[70%] font-bold'>{tile.element.symbol}</span>
             <span style={`font-size: ${position === 'relative' ? size * 0.03 : .8}rem`} class='absolute right-[15%] top-[10%]'>{#if position === 'absolute'}{tile.element.atomicNumber}{:else}?{/if}</span>

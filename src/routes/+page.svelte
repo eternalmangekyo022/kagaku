@@ -44,15 +44,21 @@
         return ret
     }
 
-    const randomTile = (): Tile => {
-        let temp: Tile = tiles[Math.floor(Math.random() * (tiles.length - 2))]
-        while(!temp.element) temp = tiles[Math.floor(Math.random() * (tiles.length - 2))]
+    const save = () => localStorage.setItem('learned', JSON.stringify(tiles.filter(i => i.learned && i.element).map(i => i?.element?.atomicNumber)))
+
+    const randomTile = (current?: Tile): Tile => {
+        let raw = tiles.filter(i => $learned.includes(i?.element?.atomicNumber || -1)).length > 0 ? tiles.filter(i => $learned.includes(i?.element?.atomicNumber || -1)) : tiles
+        let temp: Tile = raw[Math.floor(Math.random() * raw.length)]
+
+        while(!temp.element || temp?.element.atomicNumber === current?.element?.atomicNumber) {
+            temp = raw[Math.floor(Math.random() * (raw.length - 2))]
+        }
         return temp
     }
 
     onMount(async() => {
-        const temp: null | string = localStorage.getItem('learned');
-        temp && learned.set(JSON.parse(temp))
+        const temp: string = localStorage.getItem('learned') || '[]';
+        learned.set(JSON.parse(temp));
 
         let res: Response | ChemicalElement[] = await fetch('https://neelpatel05.pythonanywhere.com/')
         res = await res.json()
@@ -99,40 +105,43 @@
 */
 
 </script>
-
-    <div class='w-[100vw] h-[100vh] relative flex flex-col'>
-        <header class='w-full h-[10%] bg-slate-400'>
-            <nav class='w-full h-full flex justify-around items-center'>
-                <button on:click={() => route = '/'}>Periodic Table</button>
-                <button on:click={() => route = 'quiz'}>Quiz</button>
-            </nav>
-        </header>
-        <main class='w-full h-[80%] relative flex justify-center items-center'>
-            {#if route === '/'}
-            <!-- container for periodic table -->
-            <div
-                class='w-[70%] h-[90%] relative'
-                on:mouseleave={() => selectedColor.set(null)}
-            >
-                {#if $selected}
-                    <div class='w-[14rem] h-[10rem] absolute left-1/2 top-[3rem] -translate-x-[110%]'
-                        style={`background: #${$selected.element?.color}`}
-                    >
-                        <span class='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[70%] font-bold text-4xl'>{$selected?.element?.symbol}</span>
-                        <span class='absolute right-1 top-[1px] text-2xl'>{$selected?.element?.atomicNumber}</span>
-                        <span class='absolute left-1/2 top-[60%] text-lg -translate-x-1/2'>{$selected?.element?.name}</span>
-                        <span class='absolute top-[80%] left-1/2 -translate-x-1/2 text-sm text-center w-full text-ellipsis whitespace-nowrap overflow-hidden'>{$selected?.element?.groupBlock}</span>
-                    </div>
-                    {#each tiles as tile}
-                    <TileComponent {tile} {selected} {selectedColor} position={"absolute"} save={() => localStorage.setItem('learned', JSON.stringify(tiles.filter(i => i.learned && i.element).map(i => i?.element?.atomicNumber)))}/>
-                    {/each}
-                    {/if}
+<svelte:head>
+    <link rel="shortcut icon" href="https://www.svgrepo.com/show/384593/chemistry-experiment-health-hospital-lab-medicine.svg" type="image/x-icon">
+    <title>Kagaku</title>
+</svelte:head>
+<div class='w-[100vw] h-[100vh] relative flex flex-col'>
+    <header class='w-full h-[10%] bg-slate-400'>
+        <nav class='w-full h-full flex justify-around items-center'>
+            <button on:click={() => route = '/'}>Periodic Table</button>
+            <button on:click={() => route = 'quiz'}>Quiz</button>
+        </nav>
+    </header>
+    <main class='w-full h-[80%] relative flex justify-center items-center'>
+        {#if route === '/'}
+        <!-- container for periodic table -->
+        <div
+            class='w-[70%] h-[90%] relative'
+            on:mouseleave={() => selectedColor.set(null)}
+        >
+            {#if $selected}
+                <div class='w-[14rem] h-[10rem] absolute left-1/2 top-[3rem] -translate-x-[110%]'
+                    style={`background: #${$selected.element?.color}`}
+                >
+                    <span class='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[70%] font-bold text-4xl'>{$selected?.element?.symbol}</span>
+                    <span class='absolute right-1 top-[1px] text-2xl'>{$selected?.element?.atomicNumber}</span>
+                    <span class='absolute left-1/2 top-[60%] text-lg -translate-x-1/2'>{$selected?.element?.name}</span>
+                    <span class='absolute top-[80%] left-1/2 -translate-x-1/2 text-sm text-center w-full text-ellipsis whitespace-nowrap overflow-hidden'>{$selected?.element?.groupBlock}</span>
                 </div>
-        {:else if route === 'quiz'}
-            <Quiz {randomTile}/>
-        {/if}
-        </main>
-        <footer class='w-full h-[10%]'>
-    
-        </footer>
-    </div>
+                {#each tiles as tile}
+                <TileComponent {learned} {tile} {selected} {selectedColor} position={"absolute"} {save}/>
+                {/each}
+                {/if}
+            </div>
+    {:else if route === 'quiz'}
+        <Quiz {save} {randomTile} {learned}/>
+    {/if}
+    </main>
+    <footer class='w-full h-[10%]'>
+
+    </footer>
+</div>
