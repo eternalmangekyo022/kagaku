@@ -56,6 +56,8 @@
         return temp
     }
 
+    const clearSaved = () => {learned.set([]); localStorage.setItem('learned', '[]')}
+
     onMount(async() => {
         const temp: string = localStorage.getItem('learned') || '[]';
         learned.set(JSON.parse(temp));
@@ -110,7 +112,7 @@
     <title>Kagaku</title>
 </svelte:head>
 <div class='w-[100vw] h-[100vh] relative flex flex-col'>
-    <header class='w-full h-[10%] bg-slate-400'>
+    <header class='w-full h-[10%] bg-lime-800'>
         <nav class='w-full h-full flex justify-around items-center'>
             <button on:click={() => route = '/'}>Periodic Table</button>
             <button on:click={() => route = 'quiz'}>Quiz</button>
