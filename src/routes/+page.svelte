@@ -1,14 +1,11 @@
 <script lang='ts'>
     import TileComponent from "../components/Tile.svelte";
     import { onMount } from "svelte";
-    import { writable } from "svelte/store";
-    import type { Writable } from 'svelte/store';
     import Quiz from "../components/Quiz.svelte";
-    
-    const selectedColor = writable<string | null>(null);
-    const selected = writable<Tile | undefined>();
-    let route: '/' | 'quiz' = '/';
-    let learned: Writable<number[]> = writable([]);
+    import Visualizer from "../components/Visualizer.svelte";
+
+    import { selectedColor, selected, learned, elements } from '../store';
+    let route: '/' | 'quiz' | 'visualizer' = '/';
 
     const colors: any = {
         nonmetal: 'FEC868',
@@ -28,9 +25,8 @@
         'post-transition metal': '82A284'
     }
 
-
     const maxColumns = 18;
-    let elements: ChemicalElement[] = [];
+
     let tiles: Tile[] = [];
     let layout: (number[] | null)[] = [[1, 18], [1, 2, 13, 14, 15, 16, 17, 18], null, [], [], [-3], [-3], [-1, -2, -3], [-1, -2, -3]];
 
@@ -64,7 +60,7 @@
 
         let res: Response | ChemicalElement[] = await fetch('https://neelpatel05.pythonanywhere.com/')
         res = await res.json()
-        elements = (res as ChemicalElement[]).map(el => ({ ...el, color: colors[el.groupBlock] }))
+        elements.set((res as ChemicalElement[]).map(el => ({ ...el, color: colors[el.groupBlock] })))
 
         let elementsIdx = 0
         for(let i = 0; i < layout.length; i++) {
@@ -74,7 +70,7 @@
                             [...Array(maxColumns)].map((_, idx) => idx + 1)));
 
             for(let j = 1; j < maxColumns + 1; j++) {
-                let el: ChemicalElement | null = iter.includes(j) ? elements[elementsIdx] : null;
+                let el: ChemicalElement | null = iter.includes(j) ? $elements[elementsIdx] : null;
                 if(el) elementsIdx++;
                 tiles = [...tiles, { y: i, x: j - 1, element: el, learned: $learned.includes(el?.atomicNumber || -1) }]
             }
@@ -116,13 +112,14 @@
         <nav class='w-full h-full flex justify-around items-center'>
             <button on:click={() => route = '/'}>Periodic Table</button>
             <button on:click={() => route = 'quiz'}>Quiz</button>
+            <button on:click={() => route = 'visualizer'}>Sketch</button>
         </nav>
     </header>
-    <main class='w-full h-[80%] relative flex justify-center items-center'>
+    <main class='w-full h-[90%] relative flex justify-center'>
         {#if route === '/'}
         <!-- container for periodic table -->
         <div
-            class='w-[70%] h-[90%] relative'
+            class='w-[70%] h-[90%] relative bottom-10'
             on:mouseleave={() => selectedColor.set(null)}
         >
             {#if $selected}
@@ -140,10 +137,9 @@
                 {/if}
             </div>
     {:else if route === 'quiz'}
-        <Quiz {save} {randomTile} {learned}/>
+    <Quiz {save} {randomTile} {learned}/>
+    {:else if route === 'visualizer'}
+    <Visualizer />
     {/if}
     </main>
-    <footer class='w-full h-[10%]'>
-
-    </footer>
 </div>

@@ -8,7 +8,7 @@
     export let size = 5.25
     export let learned: Writable<number[]>;
     export let save: () => void;
-    export let mode: QuizMode | undefined; 
+    export let mode: QuizMode | undefined = undefined; 
 
     //optional
 

@@ -36,6 +36,7 @@ declare global {
 		learned: boolean
 	}
 	type QuizMode = Writable<'atomicNumber' | 'symbol' | 'groupBlock' | 'name'>
+	type Tab<T = {}> = { name: string, elements: T[] }
 }
 
 export {};
