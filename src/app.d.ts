@@ -36,7 +36,19 @@ declare global {
 		learned: boolean
 	}
 	type QuizMode = Writable<'atomicNumber' | 'symbol' | 'groupBlock' | 'name'>
-	type Tab<T = {}> = { name: string, elements: T[] }
+	type Tab<T> = { name: string, elements: T[] }
+	type BondType = {}
+
+
+	namespace Item {
+		let x: number;
+		let y: number;
+		type Bond = {
+			bondType: BondType
+		}
+		type Element = ChemicalElement;
+	}
+
 }
 
 export {};
