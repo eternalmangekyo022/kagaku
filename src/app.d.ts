@@ -36,7 +36,16 @@ declare global {
 		learned: boolean
 	}
 	type QuizMode = Writable<'atomicNumber' | 'symbol' | 'groupBlock' | 'name'>
-	type Tab<T = {}> = { name: string, elements: T[] }
+	type Tab<T> = { name: string, elements: T[] }
+	type Item = { x: number, y: number, active: boolean }
+	type BondType = {}
+
+	interface Bond extends Item {
+		bondType: BondType
+	}
+
+	interface GraphicElement extends ChemicalElement, Item {}
+
 }
 
 export {};
