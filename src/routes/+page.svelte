@@ -52,15 +52,11 @@
         return temp
     }
 
-    const clearSaved = () => {learned.set([]); localStorage.setItem('learned', '[]')}
+    /* const clearSaved = () => {learned.set([]); localStorage.setItem('learned', '[]')} */
 
     onMount(async() => {
         const temp: string = localStorage.getItem('learned') || '[]';
         learned.set(JSON.parse(temp));
-
-        let res: Response | ChemicalElement[] = await fetch('https://neelpatel05.pythonanywhere.com/')
-        res = await res.json()
-        elements.set((res as ChemicalElement[]).map(el => ({ ...el, color: colors[el.groupBlock] })))
 
         let elementsIdx = 0
         for(let i = 0; i < layout.length; i++) {

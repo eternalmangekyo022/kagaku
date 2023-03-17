@@ -37,17 +37,14 @@ declare global {
 	}
 	type QuizMode = Writable<'atomicNumber' | 'symbol' | 'groupBlock' | 'name'>
 	type Tab<T> = { name: string, elements: T[] }
+	type Item = { x: number, y: number, active: boolean }
 	type BondType = {}
 
-
-	namespace Item {
-		let x: number;
-		let y: number;
-		type Bond = {
-			bondType: BondType
-		}
-		type Element = ChemicalElement;
+	interface Bond extends Item {
+		bondType: BondType
 	}
+
+	interface GraphicElement extends ChemicalElement, Item {}
 
 }
 
