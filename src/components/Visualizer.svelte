@@ -2,30 +2,55 @@
 	import Switch from "./Switch.svelte";
 	import { elements } from "../store";
 	import { writable, type Writable } from "svelte/store";
+    import { onDestroy } from "svelte";
 
 	const active: Writable<boolean> = writable(false);
 	const tabs: [Tab<ChemicalElement>, Tab<Bond>] = [{ name: 'Elements', elements: $elements }, { name: 'Bonds', elements: [] }];
 	let items: (Bond | GraphicElement)[] = [];
 
-	let mouse = { x: 0, y: 0 }
+	let mouse: [number, number] = [0, 0];
 
 	const isChemicalElement = (obj: ChemicalElement | Bond): obj is ChemicalElement => 'name' in obj && 'symbol' in obj
-	let interval: number;
-	let currentActive: null | Item = null 
+	let intervals: number[] = [];
+
+	let selectWidth = 0;
+	let rectangle: [[number, number], [number, number]] | null = null;
+	let rectLeft: number | null = null;
+	let rectTop: number | null = null;
+
+	let visualizer;
+
+	const clearIntervals = () => intervals.forEach(i => clearInterval(i));
 
 	onmouseup = () => {
-		clearInterval(interval)
-		if(currentActive) {
-			currentActive.active = false
-			currentActive = null
-		}
+		clearIntervals();
+		intervals = [];
+		rectangle = null;
+
+		items = items.map(i => ({ ...i, active: false }));
 	}
+
+	const getLeft = (): number => {
+		if(!rectangle) return 0
+		return Math.min(rectangle[0][0], mouse[0]);
+	}
+
+	const getTop = (): number => {
+		if(!rectangle) return 0
+		return Math.min(rectangle[0][1], mouse[1]);
+	}
+
+	onDestroy(() => {
+		clearIntervals();
+	})
+
+	$: rectangle, rectLeft = getLeft(), rectTop = getTop()
 
 </script>
 
-<div class='h-full w-full flex'>
+<div class='h-full w-full flex overflow-x-hidden'>
 	<!-- select element or bond -->
-	<div class='h-full w-[15%] resize-x overflow-x-hidden min-w-[12%] max-w-[35%] border-r-2'>
+	<div class='h-full w-[15%] resize-x overflow-x-hidden min-w-[12%] max-w-[35%] border-r-2' bind:clientWidth='{selectWidth}'>
 		<!-- place for switch -->
 		<div class='w-full h-[6%] border-b-2 flex justify-center items-center gap-10'>
 			<span>Elements</span>
@@ -42,7 +67,7 @@
 				{#each tabs[0].elements as tab}
 					<div class='aspect-square border-2 flex flex-col cursor-pointer w-1/3 relative'
 						on:click="{() => {
-							items = [...items, { ...tab, x: 0, y: 0, active: false }]
+							items = [...items, { ...tab, x: 30, y: 30, active: false }]
 						}}"
 						on:keyup
 					>
@@ -59,24 +84,36 @@
 		</div>
 	</div>
 	<!-- visualize shit -->
-	<div class='w-[85%] h-full bg-gray-200 relative'
+	<div class='h-full bg-gray-200 relative' style='width: {window.innerWidth - selectWidth}px;'
 		on:mousemove='{({ pageX, pageY, currentTarget  }) => {
-			mouse = { x: pageX - currentTarget.offsetLeft, y: pageY - currentTarget.getBoundingClientRect().top }
+			mouse = [pageX - currentTarget.offsetLeft, pageY - currentTarget.getBoundingClientRect().top]
 		}}'
-	>
+		on:mousedown={() => {
+			if(items.filter(i => i.active).length === 0) {
+				const startLocation = mouse;
+				intervals.push(setInterval(() => {
+					rectangle = [startLocation, [...mouse]];
+				}, 5))
+		}}}>
 		{#each items as item}
 			<div
-				class='select-none w-20 aspect-square absolute cursor-pointer flex justify-center items-center {item.active ? '-translate-x-1/2 -translate-y-1/2' : ''}'
-				style='left: {item.x}px; top: {item.y}px'
+				class='select-none w-20 aspect-square absolute flex justify-center items-center -translate-x-1/2 -translate-y-1/2'
+				style='left: {item.x}px; top: {item.y}px; cursor: {item.active ? 'grabbing' : 'pointer'};'
 				on:mousedown='{() => {
-					interval = setInterval(() => {
-						item.x = mouse.x
-						item.y = mouse.y
-						item.active = true
-					}, 5)
+					intervals.push(setInterval(() => {
+						item = { ...item, x: mouse[0], y: mouse[1] };
+					}, 5))
+					item.active = true
 				}}'
 
-			>{isChemicalElement(item) ? item.symbol : item}</div>
+			>{isChemicalElement(item) ? item.symbol : item}
+			</div>
 		{/each}
+		{#if rectangle}
+			<div class='absolute bg-blue-300 border-2 border-blue-500 opacity-40' style='width: {Math.abs(rectangle[0][0] - rectangle[1][0])}px; 
+				height: {Math.abs(rectangle[0][1] - rectangle[1][1])}px;
+				left: {rectLeft}px; top: {rectTop}px;
+				'/>
+		{/if}
 	</div>
 </div>
