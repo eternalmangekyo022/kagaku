@@ -119,7 +119,7 @@
             on:mouseleave={() => selectedColor.set(null)}
         >
             {#if $selected}
-                <div class='w-[14rem] h-[10rem] absolute left-1/2 top-[3rem] -translate-x-[110%]'
+                <div class='w-[14rem] h-[10rem] absolute left-1/2 top-[3rem] -translate-x-[110%] select-none'
                     style={`background: #${$selected.element?.color}`}
                 >
                     <span class='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[70%] font-bold text-4xl'>{$selected?.element?.symbol}</span>
