@@ -14,11 +14,7 @@
 	let intervals: number[] = [];
 
 	let selectWidth = 0;
-	let rectangle: [[number, number], [number, number]] | null = null;
-	let rectLeft: number | null = null;
-	let rectTop: number | null = null;
-
-	let visualizer;
+	let rectangle: Rectangle | null = null;
 
 	const clearIntervals = () => intervals.forEach(i => clearInterval(i));
 
@@ -32,19 +28,24 @@
 
 	const getLeft = (): number => {
 		if(!rectangle) return 0
-		return Math.min(rectangle[0][0], mouse[0]);
+		return Math.min(rectangle.pos[0][0], mouse[0]);
 	}
 
 	const getTop = (): number => {
 		if(!rectangle) return 0
-		return Math.min(rectangle[0][1], mouse[1]);
+		return Math.min(rectangle.pos[0][1], mouse[1]);
 	}
 
 	onDestroy(() => {
 		clearIntervals();
 	})
 
-	$: rectangle, rectLeft = getLeft(), rectTop = getTop()
+	$: rectangle, () => {
+		if(rectangle) {
+			rectangle.left = getLeft()
+			rectangle.top = getTop()
+		}
+	}
 
 </script>
 
@@ -92,7 +93,7 @@
 			if(items.filter(i => i.active).length === 0) {
 				const startLocation = mouse;
 				intervals.push(setInterval(() => {
-					rectangle = [startLocation, [...mouse]];
+					rectangle = { pos: [startLocation, [...mouse]], left: getLeft(), top: getTop() };
 				}, 5))
 		}}}>
 		{#each items as item}
@@ -110,9 +111,9 @@
 			</div>
 		{/each}
 		{#if rectangle}
-			<div class='absolute bg-blue-300 border-2 border-blue-500 opacity-40' style='width: {Math.abs(rectangle[0][0] - rectangle[1][0])}px; 
-				height: {Math.abs(rectangle[0][1] - rectangle[1][1])}px;
-				left: {rectLeft}px; top: {rectTop}px;
+			<div class='absolute bg-blue-300 border-2 border-blue-500 opacity-40' style='width: {Math.abs(rectangle.pos[0][0] - rectangle.pos[1][0])}px; 
+				height: {Math.abs(rectangle.pos[0][1] - rectangle.pos[1][1])}px;
+				left: {rectangle.left}px; top: {rectangle.top}px;
 				'/>
 		{/if}
 	</div>

@@ -46,6 +46,7 @@ declare global {
 
 	interface GraphicElement extends ChemicalElement, Item {}
 
+	type Rectangle = { pos: [[number, number], [number, number]], left: number, top: number }
 }
 
 export {};
