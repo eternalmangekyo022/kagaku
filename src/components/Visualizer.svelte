@@ -10,6 +10,7 @@
 
 	let mouse: [number, number] = [0, 0];
 
+	
 	const isChemicalElement = (obj: ChemicalElement | Bond): obj is ChemicalElement => 'name' in obj && 'symbol' in obj
 	let intervals: number[] = [];
 
@@ -21,9 +22,9 @@
 	onmouseup = () => {
 		clearIntervals();
 		intervals = [];
+		items = items.map(i => ({ ...i, active: !!rectangle && (i.x < Math.max(rectangle!.pos[0][0], rectangle!.pos[1][0]) && i.x > Math.max(rectangle!.pos[0][0], rectangle!.pos[1][0]) && i.y > Math.min(rectangle!.pos[0][1], rectangle!.pos[1][1]) && i.y < Math.max(rectangle!.pos[0][1], rectangle!.pos[1][1]))}));
 		rectangle = null;
 
-		items = items.map(i => ({ ...i, active: false }));
 	}
 
 	const getLeft = (): number => {
@@ -111,7 +112,7 @@
 			</div>
 		{/each}
 		{#if rectangle}
-			<div class='absolute bg-blue-300 border-2 border-blue-500 opacity-40' style='width: {Math.abs(rectangle.pos[0][0] - rectangle.pos[1][0])}px; 
+			<div class='absolute bg-gradient-to-br from-gray-400 to-amber-100 border-2 border-blue-200 opacity-40' style='width: {Math.abs(rectangle.pos[0][0] - rectangle.pos[1][0])}px; 
 				height: {Math.abs(rectangle.pos[0][1] - rectangle.pos[1][1])}px;
 				left: {rectangle.left}px; top: {rectangle.top}px;
 				'/>

@@ -46,6 +46,15 @@ declare global {
 
 	interface GraphicElement extends ChemicalElement, Item {}
 
+	/**
+	 * The rectangle which you draw upon holding the mouse on the canvas.
+	 * 
+	 * `pos` - top left and bottom right position of the rectangle
+	 * 
+	 * `left` - distance between canvas left and rect left
+	 * 
+	 * `top` - distance between canvas top and rect top
+	*/ 
 	type Rectangle = { pos: [[number, number], [number, number]], left: number, top: number }
 }
 
