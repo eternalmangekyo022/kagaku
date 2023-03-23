@@ -115,9 +115,9 @@
                 {/if}
             </div>
     {:else if route === 'quiz'}
-    <Quiz {save} {randomTile}/>
+        <Quiz {save} {randomTile}/>
     {:else if route === 'visualizer'}
-    <Visualizer />
+        <Visualizer />
     {/if}
     </main>
 </div>
