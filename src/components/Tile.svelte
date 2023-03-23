@@ -1,12 +1,12 @@
 <script lang='ts'>
     import type { Writable } from "svelte/store";
+    import { learned } from "../store";
 
     export let tile: Tile;
     export let selected: Writable<Tile | undefined>
     export let selectedColor: Writable<string | null>
     export let position: 'relative' | 'absolute';
     export let size = 5.25
-    export let learned: Writable<number[]>;
     export let save: () => void;
     export let mode: QuizMode | undefined = undefined; 
 

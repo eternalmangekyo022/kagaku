@@ -1,14 +1,16 @@
 <script lang='ts'>
+    import { selectedColor } from "../store";
     export let onClick: any;
     export let mode: QuizMode /** note that this is a writable, not a string */;
     export let modeStr: string
-
+    let active: boolean;
+    $: active = $mode === modeStr
 </script>
 
 <button
     on:click={() => onClick(modeStr)}
-    class='border-2 w-[60%] h-14 rounded-xl'
-    style={`${$mode === modeStr ? 'background: rgb(238,174,202);background: linear-gradient(180deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);': ''}`}
+    class='w-[60%] h-14 border-x-2'
+    style='background: {active ? `radial-gradient(#${$selectedColor}, transparent)`: 'none'};'
 >
     <slot/>
 </button>

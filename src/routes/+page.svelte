@@ -7,26 +7,7 @@
     import { selectedColor, selected, learned, elements } from '../store';
     let route: '/' | 'quiz' | 'visualizer' = '/';
 
-    const colors: any = {
-        nonmetal: 'FEC868',
-        noble_gas: 'F6E1C3',
-        'noble gas': 'F6E1C3',
-        alkali_metal: 'D9ACF5',
-        'alkali metal': 'D9ACF5',
-        alkaline_earth_metal: 'AD7BE9',
-        'alkaline earth metal': 'AD7BE9',
-        metalloid: '9DC08B',
-        halogen: 'C9F4AA',
-        metal: 'DDD',
-        transition_metal: 'FFE1E1',
-        'transition metal': 'FFE1E1',
-        lanthanoid: 'CDF0EA',
-        actinoid: '789395',
-        'post-transition metal': '82A284'
-    }
-
     const maxColumns = 18;
-
     let tiles: Tile[] = [];
     let layout: (number[] | null)[] = [[1, 18], [1, 2, 13, 14, 15, 16, 17, 18], null, [], [], [-3], [-3], [-1, -2, -3], [-1, -2, -3]];
 
@@ -49,6 +30,7 @@
         while(!temp.element || temp?.element.atomicNumber === current?.element?.atomicNumber) {
             temp = raw[Math.floor(Math.random() * (raw.length - 2))]
         }
+        selectedColor.set(temp.element.color)
         return temp
     }
 
@@ -104,7 +86,7 @@
     <title>Kagaku</title>
 </svelte:head>
 <div class='w-[100vw] h-[100vh] relative flex flex-col'>
-    <header class='w-full h-[10%] bg-lime-800'>
+    <header class='w-full h-[10%] header relative' style='background: linear-gradient({$selectedColor ? '#' + $selectedColor : 'rgba(0, 0, 0, 0.5)'}, transparent);'>
         <nav class='w-full h-full flex justify-around items-center'>
             <button on:click={() => route = '/'}>Periodic Table</button>
             <button on:click={() => route = 'quiz'}>Quiz</button>
@@ -115,7 +97,7 @@
         {#if route === '/'}
         <!-- container for periodic table -->
         <div
-            class='w-[70%] h-[90%] relative bottom-10'
+            class='w-[70%] h-[90%] relative bottom-10 periodic'
             on:mouseleave={() => selectedColor.set(null)}
         >
             {#if $selected}
@@ -128,14 +110,30 @@
                     <span class='absolute top-[80%] left-1/2 -translate-x-1/2 text-sm text-center w-full text-ellipsis whitespace-nowrap overflow-hidden'>{$selected?.element?.groupBlock}</span>
                 </div>
                 {#each tiles as tile}
-                <TileComponent {learned} {tile} {selected} {selectedColor} position={"absolute"} {save}/>
+                <TileComponent {tile} {selected} {selectedColor} position={"absolute"} {save}/>
                 {/each}
                 {/if}
             </div>
     {:else if route === 'quiz'}
-    <Quiz {save} {randomTile} {learned}/>
+    <Quiz {save} {randomTile}/>
     {:else if route === 'visualizer'}
     <Visualizer />
     {/if}
     </main>
 </div>
+
+<style>
+    .header::before {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 1px;
+        background: linear-gradient(to right, transparent, rgba(0, 0, 0, .5), transparent);
+    }
+    .periodic {
+        background: radial-gradient(rgba(0, 0, 0, .5), transparent, transparent);
+    }
+</style>

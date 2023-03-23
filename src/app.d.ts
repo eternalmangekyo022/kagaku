@@ -38,10 +38,14 @@ declare global {
 	type QuizMode = Writable<'atomicNumber' | 'symbol' | 'groupBlock' | 'name'>
 	type Tab<T> = { name: string, elements: T[] }
 	type Item = { x: number, y: number, active: boolean }
-	type BondType = {}
+	type BondType = 'ionic' | 'covalent' | 'metallic' | 'hydrogen'
+	type Pos = [[number, number], [number, number]]
 
 	interface Bond extends Item {
 		bondType: BondType
+		x?
+		y?
+		pos: Pos
 	}
 
 	interface GraphicElement extends ChemicalElement, Item {}
@@ -55,7 +59,7 @@ declare global {
 	 * 
 	 * `top` - distance between canvas top and rect top
 	*/ 
-	type Rectangle = { pos: [[number, number], [number, number]], left: number, top: number }
+	type Rectangle = { pos: Pos, left: number, top: number }
 }
 
 export {};

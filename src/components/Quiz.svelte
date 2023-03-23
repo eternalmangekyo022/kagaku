@@ -2,10 +2,10 @@
     import { writable, type Writable } from "svelte/store";
     import TileComponent from "./Tile.svelte";
     import Button from "./Button.svelte";
+    import { learned } from "../store";
     
     export let randomTile: (current?: Tile) => Tile;
     export let save: () => void;
-    export let learned: Writable<number[]>;
     let mode: QuizMode = writable('atomicNumber');
 
     let tile = randomTile();
@@ -59,7 +59,7 @@
 
 <div class='w-[40%] h-[70%] flex justify-around items-center gap-8'> 
     <div class='w-full h-full flex flex-col justify-around items-center'>
-        <TileComponent {mode} {learned} {save} onClick={() => tile = randomTile(tile)} size={80} {tile} {selected} {selectedColor} position={'relative'}/>
+        <TileComponent {mode} {save} onClick={() => tile = randomTile(tile)} size={80} {tile} {selected} {selectedColor} position={'relative'}/>
         <input 
             type="text"
             class='text-center border-2' 
