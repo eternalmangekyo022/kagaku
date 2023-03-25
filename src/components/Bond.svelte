@@ -2,23 +2,39 @@
 	export let bond: Bond;
 	export let mouseDown: (e: MouseEvent) => void = () => {};
 	export let mouseUp: (e: MouseEvent) => void = () => {};
+	
+	const { pos: { start: { x: startX, y: startY }, end: { x: endX, y: endY } } } = bond
+	let left = Math.min(startX, endX);
+	let top = Math.min(startY, endY)
 
-	const getWidth = (): number => {
+	const getWidth = (): number => Math.abs(startX - endX);
+	const getHeight = (): number => Math.abs(startY - endY);
 
-		return 0
-	}
+	let width = getWidth();
+	let height = getHeight();
 
-	const getHeight = (): number => {
-		return 0
+	$: bond, () => {
+		left = Math.min(startX, endX);
+		console.log('fefef')
 	}
 </script>
 
 {#if bond}
-	<svg class='absolute w-full h-full' on:keyup>
-		<line class='cursor-pointer z-10' on:mousedown={e => mouseDown(e)} on:mouseup={mouseUp} x1={bond.pos.start.x} x2={bond.pos.end.x} y1={bond.pos.start.y} y2={bond.pos.end.y} 
-			stroke='black'
-			stroke-width=4
-			fill='black'
-		/>
-	</svg>
+	{#key bond}
+		<svg class='absolute h-full overflow-visible'
+			style='width: {width}px; height: {height}px; left: {bond.pos.start.x}px; top: {bond.pos.start.y}px;'
+		>
+			<line class='cursor-pointer z-10 w-full h-full absolute'
+				on:mousedown={e => mouseDown(e)}
+				on:mouseup={mouseUp}
+				x1={0}
+				x2={width}
+				y1={0} 
+				y2={height} 
+				stroke='black'
+				stroke-width=4
+				fill='black'
+			/>
+		</svg>
+	{/key}
 {/if}

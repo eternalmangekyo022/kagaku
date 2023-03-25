@@ -126,7 +126,9 @@
 				};
 			}}>
 			{#if $bond}
-				<BondComponent bond={$bond}/>
+				{#key $bond}
+					<BondComponent bond={$bond}/>
+				{/key}
 			{/if}
 			<!-- mouse mode -->
 			{#each graphicElements as item}
