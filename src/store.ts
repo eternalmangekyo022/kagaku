@@ -4,6 +4,7 @@ import res from './chemicals.json'
 const selectedColor = writable<string | null>(null);
 const selected = writable<Tile | undefined>();
 const learned: Writable<number[]> = writable([]);
+const mouseMode: Writable<MouseMode> = writable('select');
 const elements: Writable<ChemicalElement[]> = writable([]);
 
 /* const URL = '../static/chemicals.json' */
@@ -31,4 +32,4 @@ res = await res.json() */
 
 elements.set((res as any[]).map(el => ({ ...el, color: colors[el.groupBlock] })))
 
-export { selectedColor, selected, learned, elements }
+export { selectedColor, selected, learned, elements, mouseMode }

@@ -36,10 +36,15 @@ declare global {
 		learned: boolean
 	}
 	type QuizMode = Writable<'atomicNumber' | 'symbol' | 'groupBlock' | 'name'>
+	type MouseMode = 'select' | 'bond';
 	type Tab<T> = { name: string, elements: T[] }
 	type Item = { x: number, y: number, active: boolean }
 	type BondType = 'ionic' | 'covalent' | 'metallic' | 'hydrogen'
-	type Pos = [[number, number], [number, number]]
+	type Coords ={ x: number, y: number }
+	type Pos = {
+		start: Coords
+		end: Coords
+	}
 
 	interface Bond extends Item {
 		bondType: BondType
